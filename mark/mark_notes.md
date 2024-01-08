@@ -1,2 +1,0 @@
-# RockSat-X Plans :: Mark
-
