@@ -1,30 +1,45 @@
-#define TX1 1;
-#define RX1 0;
-
-const int BAUD = 115200;
-const int CONSOLE_BAUD = 19200;
-const int ID = 1;
-const int WRITERATE = 2; //How often this writes to radio per second
+const int BAUD = 19200;
+const int CONSOLE_BAUD = 9600;
+const String ID = "1";
+const int WRITERATE = 1; //How often this writes to radio per second
 
 long lastSend = millis();
+String recievedMessage;
+String sendMessage;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(CONSOLE_BAUD);
   Serial1.begin(BAUD);
+
+  Serial.println("Starting");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int input = 0;
-  if(Serial1.available() > 0) {
-    char out = Serial.read();
-    Serial.write(out);
+  while(Serial1.available() > 0) {
+    char out = Serial1.read();
+    if (out == '\n') {
+      Serial.println(recievedMessage);
+      recievedMessage = "";
+    } else {
+      recievedMessage += out;
+    }
   }
 
-  if(millis() - lastSend > 1000/WRITERATE) {
-    Serial1.write(ID + "\n");
-    lastSend = millis();
+  if(Serial.available() > 0) {
+    char input = Serial.read();
+    if(input == '\n') {
+      Serial1.println(sendMessage);
+      sendMessage = "";
+    } else {
+      sendMessage += input;
+    }
   }
+
+  // if(millis() - lastSend > 1000/WRITERATE) {
+  //   Serial1.println(ID);
+  //   lastSend = millis();
+  // }
 }
 
