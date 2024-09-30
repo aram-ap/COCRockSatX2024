@@ -24,13 +24,13 @@ void setup() {
 
   // Serial3.begin(MODEM_BAUD);
   Serial.begin(19200);
-  
+
   Serial.println("Magnetometer Capsule initialized");
   // Serial3.println("Magnetometer Capsule initialized");
 
   Wire.begin();
 
-  
+
   if (imu.begin() == false) // with no arguments, this uses default addresses (AG:0x6B, M:0x1E) and i2c port (Wire).
   {
     Serial.println("Failed to communicate with LSM9DS1.");
@@ -47,32 +47,32 @@ void loop() {
   if(millis() - lastSensorReading > UPDATE_RATE_MS) {
     lastSensorReading = millis();
 
-    // int altitude = baro.getAltitude() * 100;
-    // int temperature = baro.getTemperature() * 1000;
-    // int pressure = baro.getPressure() * 1000;
+    int altitude = baro.getAltitude() * 100;
+    int temperature = baro.getTemperature() * 1000;
+    int pressure = baro.getPressure() * 1000;
 
     JsonDocument reading;
     reading["ID"] = "MAGN";
     reading["SEC"] = millis()/1000;
 
     // // m/s^2
-    // reading["ACX"] = a.acceleration.x;
-    // reading["ACY"] = a.acceleration.y;
-    // reading["ACZ"] = a.acceleration.z;
+    reading["ACX"] = a.acceleration.x;
+    reading["ACY"] = a.acceleration.y;
+    reading["ACZ"] = a.acceleration.z;
 
     // // uT
-    // reading["MGX"] = m.magnetic.x;
-    // reading["MGY"] = m.magnetic.y;
-    // reading["MGZ"] = m.magnetic.z;
+    reading["MGX"] = m.magnetic.x;
+    reading["MGY"] = m.magnetic.y;
+    reading["MGZ"] = m.magnetic.z;
 
     // // rad/s
-    // reading["GYX"] = g.gyro.x;
-    // reading["GYY"] = g.gyro.y;
-    // reading["GYZ"] = g.gyro.z;
+    reading["GYX"] = g.gyro.x;
+    reading["GYY"] = g.gyro.y;
+    reading["GYZ"] = g.gyro.z;
 
-    // reading["ALT"] = (float)altitude/100.0;     // m
-    // reading["TEM"] = (float)temperature/1000.0;        // C
-    // reading["PRE"] = (float)pressure/1000.0;    // hPa
+    reading["ALT"] = (float)altitude/100.0;     // m
+    reading["TEM"] = (float)temperature/1000.0;        // C
+    reading["PRE"] = (float)pressure/1000.0;    // hPa
 
     reading["CNT"] = num++;
 
@@ -84,5 +84,5 @@ void loop() {
 }
 
 void setupSensor() {
-  
+
 }

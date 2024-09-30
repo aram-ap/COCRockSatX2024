@@ -1,9 +1,9 @@
 #include <Arduino_JSON.h>
 #include <assert.h>
 #include <DGS.h>
- 
+
 // Adafruit_MPL3115A2 mpl;
- 
+
 const int MODEM_BAUD = 57600;
 const int CONSOLE_BAUD = 57600;
 const String ID = "SO2-A";
@@ -23,26 +23,26 @@ void setup() {
 
   pinMode(21, INPUT_PULLUP);
 
-  
-  // baro.begin(TwoWire *twoWire = &Wire); 
+
+  baro.begin(TwoWire *twoWire = &Wire);
   Serial.println("Starting SO2 Capsule A");
-  // baro.setMode(MPL3115A2_BAROMETER);
-  // baro.setSeaPressure(1013.26);
+  baro.setMode(MPL3115A2_BAROMETER);
+  baro.setSeaPressure(1013.26);
 }
- 
+
 void loop() {
 
-  // baro.startOneShot();
-  // float pressure = baro.getPressure();
-  // float altitude = baro.getAltitude();
-  // float temperature = baro.getTemperature();
+  baro.startOneShot();
+  float pressure = baro.getPressure();
+  float altitude = baro.getAltitude();
+  float temperature = baro.getTemperature();
 
   // Allocate the JSON Document
 
   // Add values in the document
-  // doc["pressure"] = pressure;
-  // doc["altitude"] = altitude;
-  // doc["temperature"] = temperature;
+  doc["pressure"] = pressure;
+  doc["altitude"] = altitude;
+  doc["temperature"] = temperature;
   doc["concentration"] = so2.getConc();
   doc["tempF"] = so2.getTemp('F');
   doc["humidity"] = so2.getRh();
@@ -53,11 +53,11 @@ void loop() {
   Serial5.println(jsonString);
   Serial.println(jsonString);
 
-  
+
 
 
   // serializeJson(doc, Serial5);
   // serializeJsonPretty(doc, Serial);
- 
+
   delay(1000/UPDATE_RATE);
 }
